@@ -1,0 +1,73 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: external
+  namespace: demo
+  labels:
+    role: external
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: external
+  template:
+    metadata:
+      name: external
+      labels:
+        role: external
+    spec:
+      containers:
+          - name: client
+            image: bvandewa/kubecon17eu-client
+            env:
+            - name: BACKEND
+              value: "backend"
+---
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: frontend
+  namespace: demo
+  labels:
+    role: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: frontend
+  template:
+    metadata:
+      name: frontend
+      labels:
+        role: frontend
+    spec:
+      containers:
+          - name: client
+            image: bvandewa/kubecon17eu-client
+            env:
+            - name: BACKEND
+              value: "backend"
+---
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: backend
+  namespace: demo
+  labels:
+    role: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      role: backend
+  template:
+    metadata:
+      name: backend
+      labels:
+        role: backend
+    spec:
+      containers:
+        - name: server
+          image: bvandewa/kubecon17eu-server
+          ports:
+            - containerPort: 80
